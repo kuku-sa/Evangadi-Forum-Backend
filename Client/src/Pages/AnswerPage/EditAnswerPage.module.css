@@ -1,0 +1,60 @@
+.container, .editAnswerContainer {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.updateBtn {
+  padding: 10px 20px;
+  background-color: #007bff; /* blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.updateBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Messages */
+.message {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.error {
+  background-color: #ffe6e6; /* light red */
+  color: #cc0000; /* dark red */
+  border: 1px solid #cc0000;
+}
+
+.success {
+  background-color: #e6ffe6; /* light green */
+  color: #008000; /* dark green */
+  border: 1px solid #008000;
+}
