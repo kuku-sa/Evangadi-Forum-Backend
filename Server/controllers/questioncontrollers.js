@@ -85,11 +85,11 @@ async function get_single_question(req, res) {
 }
 
 async function post_question(req, res) {
-  // const { title, tag, description } = req?.body;
-  const title = req?.body?.title;
+  const { title, tag, description } = req?.body;
+  // const title = req?.body?.title;
   // const questionid = req?.body?.questionid;
-  const tag = req?.body?.tag;
-  const description = req?.body?.description;
+  // const tag = req?.body?.tag;
+  // const description = req?.body?.description;
 
   //  Validate request body
   if (!title || title.trim() === "") {

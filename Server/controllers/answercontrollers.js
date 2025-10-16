@@ -111,7 +111,7 @@ async function update_answer(req, res) {
   const userid = req.user.userid;
 
   try {
-    // 1️⃣ Check if answer exists
+    //  Check if answer exists
     const [rows] = await dbconnection.query(
       "SELECT * FROM answers WHERE answerid = ? AND is_deleted = 0",
       [answerid]
@@ -126,7 +126,7 @@ async function update_answer(req, res) {
         });
     }
 
-    // 2️⃣ Check if user owns this answer
+    //  Check if user owns this answer
     if (rows[0].userid !== userid) {
       return res
         .status(403)
@@ -136,10 +136,10 @@ async function update_answer(req, res) {
         });
     }
 
-    // 3️⃣ Trim the input to prevent false "no changes"
+    //  Trim the input to prevent false "no changes"
     const newAnswer = answer?.trim() ?? rows[0].answer;
 
-    // 4️⃣ Check if nothing changed
+    //  Check if nothing changed
     if (newAnswer === rows[0].answer) {
       return res.json({
         status: "no_change",
@@ -147,7 +147,7 @@ async function update_answer(req, res) {
       });
     }
 
-    // 5️⃣ Update only if something changed
+    //  Update only if something changed
     await dbconnection.query(
       "UPDATE answers SET answer = ? WHERE answerid = ?",
       [newAnswer, answerid]
