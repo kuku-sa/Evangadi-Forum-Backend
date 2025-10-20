@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const sendEmail = require("./utils/emailSender"); // ← ADD THIS (adjust path if needed)
+const sendEmail = require("./utils/emailSender");
 const app = express();
 PORT = 5000;
 app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"], // Fixed: use array
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
   })
 );
@@ -33,7 +33,7 @@ const answerRoutes = require("./routes/answerRoute");
 // answer routes middleware
 app.use("/api/answer", answerRoutes);
 
-// ⬇️ ADD TEST EMAIL ROUTE HERE ⬇️
+// Test email route
 app.post("/api/test-email", async (req, res) => {
   try {
     await sendEmail(
@@ -47,7 +47,6 @@ app.post("/api/test-email", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-// ⬆️ ADD TEST EMAIL ROUTE ABOVE ⬆️
 
 async function start() {
   try {
@@ -61,4 +60,3 @@ async function start() {
   }
 }
 start();
-
