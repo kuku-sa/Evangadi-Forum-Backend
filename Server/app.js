@@ -7,7 +7,11 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175", // ← ADD THIS
+    ],
     credentials: true,
   })
 );
@@ -50,8 +54,9 @@ app.post("/api/test-email", async (req, res) => {
 
 async function start() {
   try {
-    await dbconnection;
-    console.log("✅ Connected to MySQL2 database!");
+    // Test PostgreSQL connection
+    await dbconnection.query("SELECT NOW()");
+    console.log("✅ Connected to PostgreSQL database!");
 
     app.listen(PORT);
     console.log(`✅ Server is running on port ${PORT}`);
@@ -60,3 +65,66 @@ async function start() {
   }
 }
 start();
+
+// const express = require("express");
+// const cors = require("cors");
+// const sendEmail = require("./utils/emailSender");
+// const app = express();
+// PORT = 5000;
+// app.use(express.json());
+
+// app.use(
+//   cors({
+//     origin: ["http://localhost:5173", "http://localhost:5174"],
+//     credentials: true,
+//   })
+// );
+
+// // database connection
+// const dbconnection = require("./Database/databaseconfig");
+
+// // user routes middleware file
+// const userRoutes = require("./routes/userroutes");
+
+// // user routes middleware
+// app.use("/api/user", userRoutes);
+
+// // Question routes middleware file
+// const questionRoutes = require("./routes/questionRoute");
+
+// // Question routes middleware
+// app.use("/api/question", questionRoutes);
+
+// // answer routes middleware file
+// const answerRoutes = require("./routes/answerRoute");
+
+// // answer routes middleware
+// app.use("/api/answer", answerRoutes);
+
+// // Test email route
+// app.post("/api/test-email", async (req, res) => {
+//   try {
+//     await sendEmail(
+//       process.env.EMAIL_USER,
+//       "Test Email",
+//       "<h1>Email is working!</h1>"
+//     );
+//     res.json({ message: "Email sent successfully" });
+//   } catch (error) {
+//     console.error("Test email error:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+// async function start() {
+//   try {
+//     await dbconnection;
+//     console.log("✅ Connected to MySQL2 database!");
+
+//     app.listen(PORT);
+//     console.log(`✅ Server is running on port ${PORT}`);
+//   } catch (error) {
+//     console.error("❌ DB connection failed:", error.message);
+//   }
+// }
+// start();
