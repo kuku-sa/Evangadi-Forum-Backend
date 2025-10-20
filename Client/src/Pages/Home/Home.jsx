@@ -10,7 +10,8 @@ const Home = () => {
 
   const [questions, setQuestions] = useState([]);
   const [search, setSearch] = useState("");
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -64,10 +65,56 @@ const Home = () => {
     q.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const visibleQuestions = filteredQuestions.slice(0, visibleCount);
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visibleQuestions = filteredQuestions.slice(startIndex, endIndex);
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 7;
+
+    if (totalPages <= maxPagesToShow) {
+      // Show all pages if total is small
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+
+      // Show pages around current page
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push("...");
+      }
+
+      // Always show last page
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
 
   const deleteQuestion = async (e, questionid) => {
-    e.stopPropagation(); // prevent navigation to answer page
+    e.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this question?"))
       return;
 
@@ -131,7 +178,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Edit/Delete buttons for question owner */}
             {q.userid === user?.userid && (
               <div className="question-actions">
                 <button
@@ -157,13 +203,40 @@ const Home = () => {
         ))}
       </div>
 
-      {visibleCount < filteredQuestions.length && (
-        <div className="see-more-container">
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
           <button
-            className="see-more-btn"
-            onClick={() => setVisibleCount((prev) => prev + 5)}
+            className="pagination-btn"
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
           >
-            See More
+            Previous
+          </button>
+
+          <div className="page-numbers">
+            {getPageNumbers().map((page, index) => (
+              <button
+                key={index}
+                className={`page-number ${
+                  page === currentPage ? "active" : ""
+                } ${page === "..." ? "dots" : ""}`}
+                onClick={() => typeof page === "number" && setCurrentPage(page)}
+                disabled={page === "..."}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+
+          <button
+            className="pagination-btn"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next
           </button>
         </div>
       )}

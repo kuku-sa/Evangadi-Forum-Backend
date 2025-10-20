@@ -5,17 +5,21 @@ import axiosInstance from "../../axiosconfig";
 import "./Login.css";
 import { Appstate } from "../Appstate";
 
- const Login = () => {
+const Login = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(Appstate);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false); 
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Add these states for readonly
+  const [emailReadonly, setEmailReadonly] = useState(true);
+  const [passwordReadonly, setPasswordReadonly] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +42,7 @@ import { Appstate } from "../Appstate";
       const response = await axiosInstance.post("/user/login", {
         email,
         user_password: password,
-        rememberMe: rememberMe, 
+        rememberMe: rememberMe,
       });
 
       const { token, message, username, userid } = response.data;
@@ -47,12 +51,10 @@ import { Appstate } from "../Appstate";
 
       // Save token
       localStorage.setItem("token", token);
-      // console.log("Saved token:", token);
 
       // Save user in context
       setUser({ username, userid });
 
-    
       localStorage.setItem("username", JSON.stringify(username));
 
       // Redirect to home
@@ -74,38 +76,39 @@ import { Appstate } from "../Appstate";
         </Link>
       </p>
 
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit} autoComplete="off">
         <input
           type="email"
           placeholder="Email address"
+          name="user-email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={() => setEmailReadonly(false)}
+          readOnly={emailReadonly}
+          autoComplete="off"
         />
 
         <div className="password-field">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            name="user-password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setPasswordReadonly(false)}
+            readOnly={passwordReadonly}
+            autoComplete="new-password"
           />
           <span onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
 
-    
         <div className="remember-forgot">
           <div className="remember-me">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            <label htmlFor="rememberMe">Remember me for 30 days</label>
+           
           </div>
 
           <div className="forgot-password">

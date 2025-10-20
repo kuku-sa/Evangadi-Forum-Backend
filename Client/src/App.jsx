@@ -6,7 +6,8 @@ import Register from "./Pages/Register/Register.jsx";
 import Login from "./Pages/Login/Login.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import About from "./Pages/About/About.jsx";
-import { useEffect,useState, } from "react";
+import HowItWorks from "./Pages/HowItWorks/HowItWorks.jsx";
+import { useEffect, useState } from "react";
 import axiosInstance from "./axiosconfig.js";
 import { Appstate } from "./Pages/Appstate.js";
 import QuestionPage from "./Pages/QuestionPage/QuestionPage.jsx";
@@ -16,9 +17,8 @@ import ResetPassword from "./Pages/ResetPassword/ResetPassword.jsx";
 import EditQuestionPage from "./Pages/QuestionPage/EditQuestionPage.jsx";
 import EditAnswerPage from "./Pages/AnswerPage/EditAnswerPage.jsx";
 
-
 function App() {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +30,7 @@ function App() {
           Authorization: "Bearer " + token,
         },
       });
-      setUser(data); 
+      setUser(data);
     } catch (error) {
       console.error("Error checking user:", error);
       setUser(null);
@@ -44,7 +44,7 @@ function App() {
     } else {
       setUser(null);
     }
-  }, [token]); // re-run when token changes
+  }, [token]);
 
   const path = location.pathname.toLowerCase();
   const showAbout =
@@ -53,14 +53,15 @@ function App() {
   return (
     <Appstate.Provider value={{ user, setUser }}>
       <Header />
-      <div className="app-container" style={{ display: "flex", gap: "20px" }}>
-        <div className="form-container" style={{ flex: 2 }}>
+      <div className="app-container">
+        <div className="form-container">
           <Routes>
             <Route path="/" element={<Register />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/QuestionPage" element={<QuestionPage />} />
             <Route path="/answer/:id" element={<AnswerPage />} />
             <Route path="/forgot-Password" element={<ForgotPassword />} />
@@ -77,7 +78,7 @@ function App() {
           </Routes>
         </div>
         {showAbout && (
-          <div className="about-container" style={{ flex: 1 }}>
+          <div className="about-section">
             <About />
           </div>
         )}
@@ -86,6 +87,5 @@ function App() {
     </Appstate.Provider>
   );
 }
-
 
 export default App;

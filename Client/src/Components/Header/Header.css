@@ -2,40 +2,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 40px;
+  padding: 0; /* Removed all padding */
   background: #3b455a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: sticky;
-  z-index: 0;
+  z-index: 1000;
 }
+
 .static_position {
   position: sticky;
   top: 0;
+  z-index: 1000;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-/* Hamburger menu */
-.menu-icon {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 20px;
-  height: 16px;
-  cursor: pointer;
-}
-
-.menu-icon span {
-  display: block;
-  height: 2px;
-  width: 100%;
-  background: black;
-  border-radius: 2px;
-}
+} 
 
 /* Logo */
 .logo {
@@ -48,27 +31,35 @@
 }
 
 .logo-black {
-  color: black;
+  color: white;
+}
+
+.logo img {
+  height: 50px; 
+  width: auto;
+  object-fit: contain;
+  display: block; 
 }
 
 /* Navigation */
 .nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 20px; /* Equal spacing between all nav items */
+  padding-right: 0; /* Ensures button touches the edge */
 }
 
 .nav a {
   text-decoration: none;
-  color: black;
-  /* font-size: 14px; */
-  font-weight: 500;
   color: aliceblue;
+  font-weight: 500;
   line-height: 1.2;
+  transition: all 0.2s ease;
 }
+
 .nav a:hover {
   text-decoration: underline;
-  text-shadow: #3a55d1;
+  color: #fff;
   font-weight: bold;
 }
 
@@ -81,8 +72,67 @@
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s ease;
+  margin: 0; 
 }
 
 .signin-btn:hover {
   background: #3a55d1;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav {
+    gap: 12px;
+    padding-right: 10px;
+  }
+
+  .nav a {
+    font-size: 14px;
+  }
+
+  .signin-btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px;
+  }
+
+  .logo img {
+    height: 35px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .nav {
+    gap: 8px;
+    padding-right: 8px;
+  }
+
+  .nav a {
+    font-size: 12px;
+  }
+
+  .signin-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 }

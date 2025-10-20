@@ -20,6 +20,13 @@ const Register = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  // Add readonly states to prevent autofill
+  const [usernameReadonly, setUsernameReadonly] = useState(true);
+  const [firstNameReadonly, setFirstNameReadonly] = useState(true);
+  const [lastNameReadonly, setLastNameReadonly] = useState(true);
+  const [emailReadonly, setEmailReadonly] = useState(true);
+  const [passwordReadonly, setPasswordReadonly] = useState(true);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -59,12 +66,16 @@ const Register = () => {
         Already have an account? <Link to="/login">Sign in</Link>
       </p>
 
-      <form className="signup-form" onSubmit={handleSubmit}>
+      <form className="signup-form" onSubmit={handleSubmit} autoComplete="off">
         <input
           type="text"
           placeholder="Username"
+          name="reg-username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          onFocus={() => setUsernameReadonly(false)}
+          readOnly={usernameReadonly}
+          autoComplete="off"
           required
         />
 
@@ -72,15 +83,23 @@ const Register = () => {
           <input
             type="text"
             placeholder="First name"
+            name="reg-firstname"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            onFocus={() => setFirstNameReadonly(false)}
+            readOnly={firstNameReadonly}
+            autoComplete="off"
             required
           />
           <input
             type="text"
             placeholder="Last name"
+            name="reg-lastname"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            onFocus={() => setLastNameReadonly(false)}
+            readOnly={lastNameReadonly}
+            autoComplete="off"
             required
           />
         </div>
@@ -88,8 +107,12 @@ const Register = () => {
         <input
           type="email"
           placeholder="Email address"
+          name="reg-email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={() => setEmailReadonly(false)}
+          readOnly={emailReadonly}
+          autoComplete="off"
           required
         />
 
@@ -97,8 +120,12 @@ const Register = () => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            name="reg-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setPasswordReadonly(false)}
+            readOnly={passwordReadonly}
+            autoComplete="new-password"
             required
           />
           <span
@@ -121,12 +148,9 @@ const Register = () => {
           Agree and Join
         </button>
       </form>
-
-      <p className="signin-text">
-        Already have an account? <Link to="/login">Sign in</Link>
-      </p>
     </div>
   );
 };
 
 export default Register;
+

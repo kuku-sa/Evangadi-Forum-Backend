@@ -46,37 +46,11 @@ CREATE TABLE IF NOT EXISTS answers (
 
 
 
-Question--4 ===> Samson-
-Answer---1====> Hail-
-Login--3======> Tsion-
-Register--5====> Abubaker
-Home---2=====> Mubarek-
-
-Header=====>Samuel 
-Footer======>Samuel 
 
 
-About
-Trello
-Usecontext
-Router
-Git managmnet===Gizachew
-authmiddleware
-Database
-Axios
-.ENV
 
 
-index=0        array length 1
-[{username,firstname,lastname,email, user_password}]
 
-
-Abebe=5
-
-efjfj
-
-math.random()
-[0-1)=0-0.9999999999
 
 
 

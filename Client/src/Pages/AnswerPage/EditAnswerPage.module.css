@@ -48,13 +48,13 @@
 }
 
 .error {
-  background-color: #ffe6e6; /* light red */
-  color: #cc0000; /* dark red */
+  background-color: #ffe6e6; 
+  color: #cc0000; 
   border: 1px solid #cc0000;
 }
 
 .success {
-  background-color: #e6ffe6; /* light green */
-  color: #008000; /* dark green */
+  background-color: #e6ffe6; 
+  color: #008000; 
   border: 1px solid #008000;
 }
