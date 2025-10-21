@@ -4,13 +4,13 @@ const sendEmail = require("./utils/emailSender");
 const app = express();
 PORT = 5000;
 app.use(express.json());
-
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "http://localhost:5175", // ← ADD THIS
+      "http://localhost:5175",
+      "https://new-evangadi-forum-fina.netlify.app", // ← ADD YOUR NETLIFY URL
     ],
     credentials: true,
   })
