@@ -4,7 +4,7 @@ const sendEmail = require("./utils/emailSender");
 const app = express();
 PORT = 5000;
 app.use(express.json());
-aapp.use(
+app.use(
   cors({
     origin: [
       "http://localhost:5173",
