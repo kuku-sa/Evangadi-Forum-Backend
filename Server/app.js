@@ -1,16 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const sendEmail = require("./utils/emailSender");
+const dbconnection = require("./Database/databaseconfig");
+
 const app = express();
-// PORT = 5000;
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
+// Middleware
 app.use(express.json());
-
 app.use(
   cors({
     origin: [
@@ -23,13 +20,38 @@ app.use(
   })
 );
 
-// database connection
-const dbconnection = require("./Database/databaseconfig");
+// Test route for Railway
+app.get("/", (req, res) => {
+  res.send("🚀 Evangadi Forum Backend is running successfully on Railway!");
+});
 
-// Create tables function
+// Routes
+const userRoutes = require("./routes/userroutes");
+const questionRoutes = require("./routes/questionRoute");
+const answerRoutes = require("./routes/answerRoute");
+
+app.use("/api/user", userRoutes);
+app.use("/api/question", questionRoutes);
+app.use("/api/answer", answerRoutes);
+
+// Test email route
+app.post("/api/test-email", async (req, res) => {
+  try {
+    await sendEmail(
+      process.env.EMAIL_USER,
+      "Test Email",
+      "<h1>Email is working!</h1>"
+    );
+    res.json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Test email error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create tables if not exist
 async function createTablesIfNotExist() {
   try {
-    // Create users table
     await dbconnection.query(`
       CREATE TABLE IF NOT EXISTS users (
         userid SERIAL PRIMARY KEY,
@@ -43,7 +65,6 @@ async function createTablesIfNotExist() {
       )
     `);
 
-    // Create questions table
     await dbconnection.query(`
       CREATE TABLE IF NOT EXISTS questions (
         id SERIAL PRIMARY KEY,
@@ -58,7 +79,6 @@ async function createTablesIfNotExist() {
       )
     `);
 
-    // Create answers table
     await dbconnection.query(`
       CREATE TABLE IF NOT EXISTS answers (
         answerid SERIAL PRIMARY KEY,
@@ -78,183 +98,21 @@ async function createTablesIfNotExist() {
   }
 }
 
-// user routes middleware file
-const userRoutes = require("./routes/userroutes");
-
-// user routes middleware
-app.use("/api/user", userRoutes);
-
-// Question routes middleware file
-const questionRoutes = require("./routes/questionRoute");
-
-// Question routes middleware
-app.use("/api/question", questionRoutes);
-
-// answer routes middleware file
-const answerRoutes = require("./routes/answerRoute");
-
-// answer routes middleware
-app.use("/api/answer", answerRoutes);
-
-// Test email route
-app.post("/api/test-email", async (req, res) => {
-  try {
-    await sendEmail(
-      process.env.EMAIL_USER,
-      "Test Email",
-      "<h1>Email is working!</h1>"
-    );
-    res.json({ message: "Email sent successfully" });
-  } catch (error) {
-    console.error("Test email error:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
+// Start server and DB connection
 async function start() {
   try {
-    // Test PostgreSQL connection
     await dbconnection.query("SELECT NOW()");
     console.log("✅ Connected to PostgreSQL database!");
 
-    // Create tables
     await createTablesIfNotExist();
 
-    app.listen(PORT);
-    console.log(`✅ Server is running on port ${PORT}`);
+    // ✅ Only ONE app.listen()
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
   } catch (error) {
     console.error("❌ DB connection failed:", error.message);
   }
 }
+
 start();
-
-// const express = require("express");
-// const cors = require("cors");
-// const sendEmail = require("./utils/emailSender");
-// const app = express();
-// PORT = 5000;
-// app.use(express.json());
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173",
-//       "http://localhost:5174",
-//       "http://localhost:5175",
-//       "https://2025-evangadi-forum-project.netlify.app",
-//     ],
-//     credentials: true,
-//   })
-// );
-
-// // database connection
-// const dbconnection = require("./Database/databaseconfig");
-
-// // user routes middleware file
-// const userRoutes = require("./routes/userroutes");
-
-// // user routes middleware
-// app.use("/api/user", userRoutes);
-
-// // Question routes middleware file
-// const questionRoutes = require("./routes/questionRoute");
-
-// // Question routes middleware
-// app.use("/api/question", questionRoutes);
-
-// // answer routes middleware file
-// const answerRoutes = require("./routes/answerRoute");
-
-// // answer routes middleware
-// app.use("/api/answer", answerRoutes);
-
-// // Test email route
-// app.post("/api/test-email", async (req, res) => {
-//   try {
-//     await sendEmail(
-//       process.env.EMAIL_USER,
-//       "Test Email",
-//       "<h1>Email is working!</h1>"
-//     );
-//     res.json({ message: "Email sent successfully" });
-//   } catch (error) {
-//     console.error("Test email error:", error);
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// async function start() {
-//   try {
-//     // Test PostgreSQL connection
-//     await dbconnection.query("SELECT NOW()");
-//     console.log("✅ Connected to PostgreSQL database!");
-
-//     app.listen(PORT);
-//     console.log(`✅ Server is running on port ${PORT}`);
-//   } catch (error) {
-//     console.error("❌ DB connection failed:", error.message);
-//   }
-// }
-// start();
-
-// // const express = require("express");
-// // const cors = require("cors");
-// // const sendEmail = require("./utils/emailSender");
-// // const app = express();
-// // PORT = 5000;
-// // app.use(express.json());
-
-// // app.use(
-// //   cors({
-// //     origin: ["http://localhost:5173", "http://localhost:5174"],
-// //     credentials: true,
-// //   })
-// // );
-
-// // // database connection
-// // const dbconnection = require("./Database/databaseconfig");
-
-// // // user routes middleware file
-// // const userRoutes = require("./routes/userroutes");
-
-// // // user routes middleware
-// // app.use("/api/user", userRoutes);
-
-// // // Question routes middleware file
-// // const questionRoutes = require("./routes/questionRoute");
-
-// // // Question routes middleware
-// // app.use("/api/question", questionRoutes);
-
-// // // answer routes middleware file
-// // const answerRoutes = require("./routes/answerRoute");
-
-// // // answer routes middleware
-// // app.use("/api/answer", answerRoutes);
-
-// // // Test email route
-// // app.post("/api/test-email", async (req, res) => {
-// //   try {
-// //     await sendEmail(
-// //       process.env.EMAIL_USER,
-// //       "Test Email",
-// //       "<h1>Email is working!</h1>"
-// //     );
-// //     res.json({ message: "Email sent successfully" });
-// //   } catch (error) {
-// //     console.error("Test email error:", error);
-// //     res.status(500).json({ error: error.message });
-// //   }
-// // });
-
-// // async function start() {
-// //   try {
-// //     await dbconnection;
-// //     console.log("✅ Connected to MySQL2 database!");
-
-// //     app.listen(PORT);
-// //     console.log(`✅ Server is running on port ${PORT}`);
-// //   } catch (error) {
-// //     console.error("❌ DB connection failed:", error.message);
-// //   }
-// // }
-// // start();
