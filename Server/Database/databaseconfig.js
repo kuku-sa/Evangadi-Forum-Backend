@@ -46,3 +46,4 @@ module.exports = {
 // });
 
 // module.exports = dbconnection.promise();
+// postgresql://evangadi_forum_db_jody_user:fG5C2yQ5I0iTlT1qjc03zROnejcNVhql@dpg-d3u9uguuk2gs73dmud9g-a/evangadi_forum_db_jody

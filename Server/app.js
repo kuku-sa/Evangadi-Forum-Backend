@@ -2,7 +2,13 @@ const express = require("express");
 const cors = require("cors");
 const sendEmail = require("./utils/emailSender");
 const app = express();
-PORT = 5000;
+// PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 app.use(express.json());
 
 app.use(
