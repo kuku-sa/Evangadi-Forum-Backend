@@ -7,19 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:5175",
-      "https://2025-evangadi-forum-project.netlify.app",
-      "https://evangadi-forum-new.netlify.app",  // ✅ Added your new Netlify URL
-    ],
-    credentials: true,
-  })
-);
+app.use( cors({ origin: [ "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://2025-evangadi-forum-project.netlify.app", "https://evangadi-forum-new.netlify.app", ], credentials: true, }) );
 
 // Test route
 app.get("/", (req, res) => {
