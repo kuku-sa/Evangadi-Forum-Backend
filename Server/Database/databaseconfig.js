@@ -1,12 +1,18 @@
 const { Pool } = require("pg");
 
-// Only load .env in development
+// Load .env in development
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+// Use DATABASE_URL if it exists (Railway), otherwise use separate env variables
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || undefined,
+  host: process.env.DB_HOST || undefined,
+  port: process.env.DB_PORT || 5432,
+  user: process.env.DB_USER || undefined,
+  password: process.env.DB_PASSWORD || undefined,
+  database: process.env.DB_NAME || undefined,
   ssl:
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }

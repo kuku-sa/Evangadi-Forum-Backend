@@ -13,7 +13,7 @@ const {
 } = require("../controllers/questioncontrollers");
 
 // get all questions
-router.get("/", authmiddleware, get_all_questions);
+router.get("/", get_all_questions);
 
 // get single question
 router.get("/:questionid", authmiddleware, get_single_question);

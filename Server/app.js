@@ -15,14 +15,15 @@ app.use(
       "http://localhost:5174",
       "http://localhost:5175",
       "https://2025-evangadi-forum-project.netlify.app",
+      "https://evangadi-forum-new.netlify.app",  // ✅ Added your new Netlify URL
     ],
     credentials: true,
   })
 );
 
-// Test route for Railway
+// Test route
 app.get("/", (req, res) => {
-  res.send("🚀 Evangadi Forum Backend is running successfully on Railway!");
+  res.send("🚀 Evangadi Forum Backend is running successfully on Render!");
 });
 
 // Routes
@@ -36,12 +37,13 @@ app.use("/api/answer", answerRoutes);
 
 // Test email route
 app.post("/api/test-email", async (req, res) => {
+  if (!process.env.EMAIL_USER) {
+    return res
+      .status(500)
+      .json({ error: "EMAIL_USER is not set in environment variables" });
+  }
   try {
-    await sendEmail(
-      process.env.EMAIL_USER,
-      "Test Email",
-      "<h1>Email is working!</h1>"
-    );
+    await sendEmail(process.env.EMAIL_USER, "Test Email", "<h1>Email is working!</h1>");
     res.json({ message: "Email sent successfully" });
   } catch (error) {
     console.error("Test email error:", error);
@@ -49,7 +51,9 @@ app.post("/api/test-email", async (req, res) => {
   }
 });
 
-// Create tables if not exist
+// ------------------------
+// Table creation function
+// ------------------------
 async function createTablesIfNotExist() {
   try {
     await dbconnection.query(`
@@ -92,27 +96,31 @@ async function createTablesIfNotExist() {
       )
     `);
 
-    console.log("✅ Database tables ready!");
+    console.log("✅ All tables ready or already exist");
   } catch (error) {
     console.error("❌ Error creating tables:", error);
   }
 }
 
-// Start server and DB connection
+// ------------------------
+// Start server
+// ------------------------
 async function start() {
   try {
+    // Test DB connection
     await dbconnection.query("SELECT NOW()");
     console.log("✅ Connected to PostgreSQL database!");
 
+    // Create tables
     await createTablesIfNotExist();
 
-    // ✅ Only ONE app.listen()
+    // Start server
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ DB connection failed:", error.message);
-  }
+    console.error("❌ Failed to start server:", error.message);
+  }
 }
 
 start();
