@@ -11,6 +11,7 @@ const Home = () => {
   const [questions, setQuestions] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -32,6 +33,8 @@ const Home = () => {
         await axiosInstance.get("/user/checkUser", {
           headers: { Authorization: "Bearer " + token },
         });
+        
+        setIsAuthenticated(true); // ✅ Set authenticated after successful check
       } catch (err) {
         console.error("Token check failed:", err.response?.data || err.message);
         navigate("/login");
@@ -42,6 +45,9 @@ const Home = () => {
   }, [user, setUser, navigate]);
 
   useEffect(() => {
+    // ✅ Only fetch questions if user is authenticated
+    if (!isAuthenticated) return;
+
     const fetchQuestions = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -59,7 +65,7 @@ const Home = () => {
       }
     };
     fetchQuestions();
-  }, []);
+  }, [isAuthenticated]); // ✅ Only run when isAuthenticated changes
 
   const filteredQuestions = questions.filter((q) =>
     q.title.toLowerCase().includes(search.toLowerCase())
@@ -82,19 +88,16 @@ const Home = () => {
     const maxPagesToShow = 7;
 
     if (totalPages <= maxPagesToShow) {
-      // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Always show first page
       pages.push(1);
 
       if (currentPage > 3) {
         pages.push("...");
       }
 
-      // Show pages around current page
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
 
@@ -106,7 +109,6 @@ const Home = () => {
         pages.push("...");
       }
 
-      // Always show last page
       pages.push(totalPages);
     }
 
@@ -120,7 +122,7 @@ const Home = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.delete(`/question/${questionid}`, {
+      await axiosInstance.delete("/question/" + questionid,{
         headers: { Authorization: "Bearer " + token },
       });
       setQuestions((prev) => prev.filter((q) => q.questionid !== questionid));
@@ -129,6 +131,11 @@ const Home = () => {
       alert("Error deleting question");
     }
   };
+
+  // ✅ Show loading state while checking authentication
+  if (!isAuthenticated) {
+    return <div className="home-container">Loading...</div>;
+  }
 
   return (
     <div className="home-container">
@@ -156,7 +163,7 @@ const Home = () => {
           <div
             key={q.questionid}
             className="question-item"
-            onClick={() => navigate(`/answer/${q.questionid}`)}
+            onClick={() => navigate("/answer/" + q.questionid)}
             style={{ cursor: "pointer" }}
           >
             <div className="question-left">
@@ -184,7 +191,7 @@ const Home = () => {
                   className="edit-btn"
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/QuestionPage/${q.questionid}/edit`);
+                    navigate("/QuestionPage/" + q.questionid + "/edit");
                   }}
                 >
                   Edit
@@ -203,7 +210,6 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination-container">
           <button
